@@ -1,0 +1,30 @@
+import geopandas as gpd
+import matplotlib.pyplot as plt
+
+# Load built-in world shapefile
+# The geopandas.dataset has been deprecated and was removed in GeoPandas 1.0.
+# We will load the data directly from Natural Earth Data's GeoJSON URL.
+geojson_url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson"
+world = gpd.read_file(geojson_url)
+
+# 1️⃣ Basic World Map
+fig, ax = plt.subplots(figsize=(10, 5))
+world.plot(ax=ax, linewidth=0.4, edgecolor='black')
+ax.set_title("Basic World Map", fontsize=14)
+ax.set_axis_off()
+plt.savefig("world_map_basic.png", dpi=150, bbox_inches='tight')
+plt.show()
+
+# Inspect available columns to fix KeyError
+print("Available columns in world GeoDataFrame:")
+print(world.columns.tolist())
+
+# 2️⃣ Population-based Choropleth Map
+# The 'pop_est' column is not available in this dataset, leading to a KeyError.
+# We need to find an alternative column for population or another suitable metric.
+fig, ax = plt.subplots(figsize=(10, 5))
+world.plot(column='POP_EST', cmap='YlOrRd', ax=ax, legend=True, linewidth=0.4, edgecolor='black')
+ax.set_title("World Population Distribution", fontsize=14)
+ax.set_axis_off()
+plt.savefig("world_map_population.png", dpi=150, bbox_inches='tight')
+plt.show()
